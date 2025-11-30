@@ -16,18 +16,18 @@ public class Decoder
             var read = message.Read(buffer, 0, buffer.Length);
             var chunk = new string(buffer, 0, read);
             var usefulLetters = GetUsefulLetters(chunk);
-            usefulLetters.PlaceCorrectly();
-            result.Append(ProcessDecode(usefulLetters));
+            var correctlyPlacedLetters = PlaceCorrectly(usefulLetters);
+            result.Append(ProcessDecode(correctlyPlacedLetters));
         }
         return result.ToString();
     }
 
-    private static string ProcessDecode(StringBuilder usefulLetters)
+    private static string ProcessDecode(char[] encodedSymbols)
     {
         var result = new StringBuilder();
-        for (var i = 0; i < usefulLetters.Length; i += 2)
+        for (var i = 0; i < encodedSymbols.Length; i += 2)
         {
-            var encodedLetter = new string(new[] { usefulLetters[i], usefulLetters[i + 1] });
+            var encodedLetter = new string(new[] { encodedSymbols[i], encodedSymbols[i + 1] });
             if (Encodings.TryGetValue(encodedLetter, out var decodedLetter))
                 result.Append(decodedLetter);
             else
@@ -36,14 +36,21 @@ public class Decoder
         return result.ToString();
     }
 
-    private static StringBuilder GetUsefulLetters(string chunk)
-    {
-        var usefulLetters = new StringBuilder(8);
-        usefulLetters.Append(chunk.Substring(0, 2));
-        usefulLetters.Append(chunk.Substring(6, 1));
-        usefulLetters.Append(chunk.Substring(8, 5));
-        return usefulLetters;
-    }
+    private static char[] GetUsefulLetters(string chunk) => 
+        new [] { chunk[0], chunk[1], chunk[6], chunk[8], chunk[9], chunk[10], chunk[11], chunk[12] };
+
+    private static char[] PlaceCorrectly(char[] usefulLetters) =>
+        new[]
+        {
+            usefulLetters[0],
+            usefulLetters[4],
+            usefulLetters[3],
+            usefulLetters[1],
+            usefulLetters[7],
+            usefulLetters[6],
+            usefulLetters[2],
+            usefulLetters[5],
+        };
 
 
     public static class Helper
@@ -53,18 +60,5 @@ public class Decoder
                                             dotnet decoder.dll /path/to/encodede-message или ./decoder /path/to/encoded-message
                                             Если файл с сообщением не был указан то возьмется файл из текущей директории (имя файла по умолчанию - message.txt)
                                        """;
-    }
-}
-
-public static class LettersExtensions
-{
-    public static void PlaceCorrectly(this StringBuilder usefulLetters)
-    {
-        (usefulLetters[1], usefulLetters[4]) = (usefulLetters[4], usefulLetters[1]);
-        (usefulLetters[4], usefulLetters[6]) = (usefulLetters[6], usefulLetters[4]);
-        (usefulLetters[5], usefulLetters[7]) = (usefulLetters[7], usefulLetters[5]);
-        (usefulLetters[2], usefulLetters[6]) = (usefulLetters[6], usefulLetters[2]);
-        (usefulLetters[2], usefulLetters[3]) = (usefulLetters[3], usefulLetters[2]);
-        (usefulLetters[4], usefulLetters[5]) = (usefulLetters[5], usefulLetters[4]);
     }
 }
