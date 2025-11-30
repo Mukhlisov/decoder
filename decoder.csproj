@@ -6,12 +6,12 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
     </PropertyGroup>
-    <Target Name="CopyCustomFile" AfterTargets="Build">
+    <Target Name="CopyEncodings" AfterTargets="Build">
         <Copy
                 SourceFiles="$(ProjectDir)Encodings.txt"
                 DestinationFolder="$(OutDir)" />
     </Target>
-    <Target Name="CopyCustomFile" AfterTargets="Build">
+    <Target Name="CopyMessage" AfterTargets="Build">
         <Copy
                 SourceFiles="$(ProjectDir)message.txt"
                 DestinationFolder="$(OutDir)" />

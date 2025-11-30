@@ -9,7 +9,7 @@ class Program
 
         using var message = new StreamReader(messageFilePath);
         var decodedMessage = Decoder.Decode(message);
-        Console.WriteLine(decodedMessage);
+        WriteToFile(decodedMessage);
     }
 
     private static bool TryHandleMessageFilePath(string[] args, out string messageFilePath)
@@ -18,5 +18,13 @@ class Program
             ? Path.Combine(AppContext.BaseDirectory, "message.txt") 
             : args[0];
         return File.Exists(messageFilePath);
+    }
+
+    private static void WriteToFile(string @string)
+    {
+        var path = Path.Combine(AppContext.BaseDirectory, "decoded.txt");
+        if (File.Exists(path))
+            File.Delete(path);
+        File.WriteAllText(path, @string);
     }
 }
