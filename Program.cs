@@ -8,8 +8,9 @@ class Program
             Console.WriteLine(Decoder.Helper.HowToUse);
 
         using var message = new StreamReader(messageFilePath);
-        var decodedMessage = Decoder.Decode(message);
-        WriteToFile(decodedMessage);
+        var (decodedMessage, filteredMessage) = Decoder.Decode(message);
+        WriteToFile(decodedMessage, "decoded.txt");
+        WriteToFile(filteredMessage, "filtered.txt");
     }
 
     private static bool TryHandleMessageFilePath(string[] args, out string messageFilePath)
@@ -20,9 +21,9 @@ class Program
         return File.Exists(messageFilePath);
     }
 
-    private static void WriteToFile(string @string)
+    private static void WriteToFile(string @string, string name)
     {
-        var path = Path.Combine(AppContext.BaseDirectory, "decoded.txt");
+        var path = Path.Combine(AppContext.BaseDirectory, name);
         if (File.Exists(path))
             File.Delete(path);
         File.WriteAllText(path, @string);
