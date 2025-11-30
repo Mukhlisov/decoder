@@ -1,0 +1,11 @@
+AA: 
+CD:1
+NA:а
+DD:г
+ON:д
+ME:е
+OI:и
+LC:Л
+AJ:н
+CH:р
+MB:0
