@@ -8,9 +8,8 @@ class Program
             Console.WriteLine(Decoder.Helper.HowToUse);
 
         using var message = new StreamReader(messageFilePath);
-        var (decodedMessage, filteredMessage) = Decoder.Decode(message);
+        var decodedMessage = Decoder.Decode(message);
         WriteToFile(decodedMessage, "decoded.txt");
-        WriteToFile(filteredMessage, "filtered.txt");
     }
 
     private static bool TryHandleMessageFilePath(string[] args, out string messageFilePath)

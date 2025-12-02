@@ -7,10 +7,9 @@ public class Decoder
     private static readonly Lazy<Dictionary<string, string>> _encodings = new (encodings.Encodings.ReadEncodings);
     private static Dictionary<string, string> Encodings => _encodings.Value;
 
-    public static (string, string) Decode(StreamReader message)
+    public static string Decode(StreamReader message)
     {
         var result = new StringBuilder();
-        var filteredMessage = new StringBuilder();
         var buffer = new char[16];
         while (!message.EndOfStream)
         {
@@ -18,10 +17,9 @@ public class Decoder
             var chunk = new string(buffer, 0, read);
             var usefulLetters = GetUsefulLetters(chunk);
             var correctlyPlacedLetters = PlaceCorrectly(usefulLetters);
-            filteredMessage.Append(correctlyPlacedLetters);
             result.Append(ProcessDecode(correctlyPlacedLetters));
         }
-        return (result.ToString(),  filteredMessage.ToString());;
+        return result.ToString();
     }
 
     private static string ProcessDecode(char[] encodedSymbols)
@@ -32,8 +30,6 @@ public class Decoder
             var encodedLetter = new string(new[] { encodedSymbols[i], encodedSymbols[i + 1] });
             if (Encodings.TryGetValue(encodedLetter, out var decodedLetter))
                 result.Append(decodedLetter);
-            else if (!encodedLetter.Equals("MB"))
-                result.Append('?');
         }
         return result.ToString();
     }
